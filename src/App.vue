@@ -9,7 +9,8 @@ import { RouterLink, RouterView } from 'vue-router'
     <div class="container-fluid">
       <div class="container-fluid">
         <RouterLink to="/" class="btn btn-outline-secondary me-2">Home</RouterLink>
-        <RouterLink to="/pokemons" class="btn btn-outline-secondary ">Pokemons</RouterLink>
+        <RouterLink to="/pokemons" class="btn btn-outline-secondary mx-2">Pokemons</RouterLink>
+        <RouterLink to="/favoritos" class="btn btn-outline-secondary ms-2">Favoritos</RouterLink>
       </div>
     </div>
   </nav>
