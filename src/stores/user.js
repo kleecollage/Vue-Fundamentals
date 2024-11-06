@@ -7,6 +7,7 @@ import {
 } from 'firebase/auth';
 import router from '../router';
 import { auth } from '../firebaseConfig';
+import { userDatabaseStore } from './database';
 
 export const useUserStore = defineStore('userStore', {
 	state: () => ({
@@ -42,7 +43,6 @@ export const useUserStore = defineStore('userStore', {
 				);
 				this.userData = { email: user.email, uid: user.uid };
 				router.push('/');
-				console.log('logged...', email);
 			} catch (e) {
 				console.log(e);
 			} finally {
@@ -51,6 +51,8 @@ export const useUserStore = defineStore('userStore', {
 		},
 
 		async logoutUser() {
+			const databaseStore = userDatabaseStore();
+			databaseStore.$reset();
 			try {
 				await signOut(auth);
 				this.userData = null;
@@ -59,7 +61,6 @@ export const useUserStore = defineStore('userStore', {
 				console.log(error);
 			}
 		},
-
 		
     currentUser() {
 			return new Promise((resolve, reject) => {
@@ -79,8 +80,6 @@ export const useUserStore = defineStore('userStore', {
 				);
 			});
 		},
-    
-
 
 
 	},
