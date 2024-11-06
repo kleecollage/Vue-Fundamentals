@@ -13,7 +13,7 @@
        ID: {{ item.id }} <br /> URL: {{ item.name }} <br /> SHORT: {{ item.short }} <br />
        <button @click="databaseStore.deleteUrl(item.id)">Eliminar</button> &nbsp;
        <button @click="router.push(`/edit/${item.id}`)">Editar</button>
-       <hr />
+       <hr /> <br />
     </li>
   </ul>
 </template>
