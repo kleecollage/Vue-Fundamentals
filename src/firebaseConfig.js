@@ -4,7 +4,7 @@ import { getFirestore } from 'firebase/firestore/lite';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "SECRET_KEY",
+  apiKey: "AIzaSyC3JamkXUd8kpEg1184NzpjiZWPK_U9MLI",
   authDomain: "vue-3-a37f1.firebaseapp.com",
   projectId: "vue-3-a37f1",
   storageBucket: "vue-3-a37f1.firebasestorage.app",

@@ -2,7 +2,9 @@
   <h1>Register</h1>
   <form @submit.prevent="handleSubmit">
     <input type="email" placeholder="Ingrese su email" v-model.trim="email">
+    <br /> 
     <input type="password" placeholder="Ingrese su contraseña" v-model.trim="password">
+    <br /> <br />
     <button type="submit" :disabled="userStore.loadingUser">Crear Usuario</button>
   </form>
 </template>
