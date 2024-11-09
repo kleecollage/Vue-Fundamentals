@@ -14,10 +14,11 @@ import { auth, db } from '../firebaseConfig';
 import { nanoid } from 'nanoid';
 import router from '../router';
 
-export const userDatabaseStore = defineStore('database', {
+export const useDatabaseStore = defineStore('database', {
 	state: () => ({
 		documents: [],
 		loadingDoc: false,
+		loading: false,
 	}),
 	actions: {
 		// READ
@@ -47,6 +48,7 @@ export const userDatabaseStore = defineStore('database', {
 		},
 		// CREATE
 		async addUrl(name) {
+			this.loading = true
 			try {
 				const objetoDoc = {
 					name: name,
@@ -60,10 +62,13 @@ export const userDatabaseStore = defineStore('database', {
 				});
 			} catch (error) {
 				console.log(error);
+			} finally {
+				this.loading = false
 			}
 		},
 		// DELETE
 		async deleteUrl(id) {
+			this.loading = true
 			try {
 				const docRef = doc(db, 'urls', id);
 				const docSnap = await getDoc(docRef);
@@ -77,13 +82,19 @@ export const userDatabaseStore = defineStore('database', {
 				}
 
 				await deleteDoc(docRef);
+				
 				this.documents = this.documents.filter((item) => item.id !== id);
+
 			} catch (error) {
-				console.log(error);
+				// console.log(error.code);
+				return error.message
+			} finally {
+				this.loading = false
 			}
 		},
 		// GET ONE
 		async getUrl(id) {
+			this.loading = true
 			try {
 				const docRef = doc(db, 'urls', id);
 				const docSnap = await getDoc(docRef);
@@ -95,10 +106,13 @@ export const userDatabaseStore = defineStore('database', {
 				return docSnap.data().name;
 			} catch (error) {
 				console.log(error.nessage);
+			} finally {
+				this.loading = false
 			}
 		},
 		// UPDATE
 		async updateUrl(id, name) {
+			this.loading = true
 			try {
 				const docRef = doc(db, 'urls', id);
 				const docSnap = await getDoc(docRef);
@@ -114,9 +128,15 @@ export const userDatabaseStore = defineStore('database', {
 				this.documents = this.documents.map((item) =>
 					item.id == id ? { ...item, name: name } : item
 				);
-        router.push('/')
+        
+				router.push('/');
 			} catch (error) {
-				console.log(error);
+				console.log(error.message);
+				
+				return error.message
+
+			} finally {
+				this.loading = false
 			}
 		},
 	},

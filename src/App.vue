@@ -26,7 +26,8 @@
     </a-layout-header>
 
     <a-layout-content style="padding: 0 50px;">
-      <div :style="{ background: '#fff', padding: '24px', minHeight: '75vh'}">
+      <a-breadcrumb style="margin: 16px 0" />
+      <div class="container">
         <div v-if="userStore.loadingSession"> loading user ... </div>
         <router-view></router-view>
       </div>
@@ -60,7 +61,6 @@ watch(
 </script>
 
 <style scoped>
-
 .site-layout-content {
   min-height: 280px;
   padding: 24px;
@@ -80,6 +80,16 @@ watch(
 
 [data-theme='dark'] .site-layout-content {
   background: #141414;
+}
+
+.container{
+  min-height: 75vh;
+  padding: 24px;
+  background: #fff;
+}
+
+.text-center{
+  text-align: center;
 }
 </style>
 

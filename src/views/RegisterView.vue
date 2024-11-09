@@ -1,33 +1,111 @@
 <template>
-  <h1>Register</h1>
-  <form @submit.prevent="handleSubmit">
-    <input type="email" placeholder="Ingrese su email" v-model.trim="email">
-    <br /> 
-    <input type="password" placeholder="Ingrese su contraseña" v-model.trim="password">
-    <br /> <br />
-    <button type="submit" :disabled="userStore.loadingUser">Crear Usuario</button>
-  </form>
+  <h2 class="text-center">Registrate</h2>
+  <a-row>
+    <a-col :xs="{span: 24}" :sm="{span: 12, offset: 6}">
+      <a-form
+        name="basicRegister"
+        :model="formState"
+        layout="vertical"
+        @finish="onFinish"
+        @finishFailed="onFinishFailed"
+      >
+
+        <a-form-item
+          name="email"
+          label="Ingrese su correo"
+          :rules="[{
+            required: true,
+            whitespace: true,
+            message: 'Ingrese un correo valido',
+            type: 'email'
+          }]"
+        >
+          <a-input v-model:value="formState.email"/>
+        </a-form-item>
+
+        <a-form-item
+          name="password"
+          label="Ingrese una contraseña"
+          :rules="[{
+            required: true,
+            min: 6,
+            whitespace: true,
+            message: 'La contraseña debe tener almenos 6 caracteres',
+          }]"
+        >
+          <a-input-password v-model:value="formState.password" type="password" />
+        </a-form-item>
+
+        <a-form-item
+          name="repassword"
+          label="Ingrese nuevamente la contraseña"
+          :rules="[{
+            required: true,
+            min: 6,
+            whitespace: true,
+            validator: validatePass,
+          }]"
+        >
+          <a-input-password v-model:value="formState.repassword" type="password" />
+        </a-form-item>
+
+        <a-button type="default" html-type="submit" :loading="userStore.loadingUser" >
+            Registrarse
+          </a-button>
+      </a-form>
+    </a-col>
+  </a-row>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+// IMPORTS
+import { reactive } from 'vue';
 import { useUserStore } from '../stores/user';
-// import { useRouter } from 'vue-router';
+import { message } from 'ant-design-vue';
 
+
+// CONSTS
 const userStore = useUserStore();
-// const router = useRouter();
+const formState = reactive({
+  email: "",
+  password: "",
+  repassword: "",
+})
 
-const email = ref('john.d@mail.com');
-const password = ref('12345678');
-
-
-const handleSubmit = async() => {
-  if (!email.value || password.value.length < 6) {
-    return alert('¡Hay campos vacios!')
+// METHODS
+const validatePass = async(_rule, value) => {
+  if (value === '') {
+    return Promise.reject('Verifique su contraseña')
   }
-  await userStore.registerUser(email.value, password.value)
-  // router.push('/')
+  if (value !== formState.password) {
+    return Promise.reject('Las contraseñas no son iguales')
+  }
+  
+  return Promise.resolve()
 }
+
+const onFinish = async(values) => {
+  console.log("Success: ", values)
+  const error = await userStore.registerUser(formState.email, formState.password)
+
+  if (!error){
+    return message.success('Revisa tu correo electronico y verificalo')
+  }
+
+  switch (error) {
+    case 'auth/email-already-in-use':
+      message.warning('Este correo ya esta registrado')
+      break;
+    default:
+      message.warning('Ha ocurrido un error. Contacte al administrador')
+      break;
+  }
+}; 
+
+
+const onFinishFailed = errorInfo => {
+  console.log('Failed: ', errorInfo);
+};
 
 
 </script>
