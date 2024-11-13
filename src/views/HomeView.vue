@@ -7,7 +7,7 @@
   <p v-if="databaseStore.loadingDoc">Loading Docs ....</p>
   <!-- DATA CONTENT -->
    <a-space direction="vertical" v-if="!databaseStore.loadingDoc" style="width: 100%">
-     <a-card v-for="item of databaseStore.documents" :title="'SHORT - ' + item.short" style="background-color: lightcyan;">
+     <a-card v-for="item of databaseStore.documents" :title="'CUT:   ' + item.short" style="background-color: lightcyan;">
       <template #extra />
       <p>URL: {{ item.name }}</p>
       <a-space>        
@@ -15,6 +15,10 @@
           Editar
         </a-button>
   
+        <a-button type="default" @click="copiarCortapapeles(item.id)">
+          Copiar
+        </a-button>
+
         <a-popconfirm
          title="¿Seguro deseas eliminar este elemento?"
          ok-text="Awebo Perro"
@@ -36,11 +40,11 @@ import { useUserStore } from '../stores/user';
 import { useDatabaseStore } from '../stores/database';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
-
+// CONSTANTS
 const router = useRouter();
 const userStore = useUserStore();
 const databaseStore = useDatabaseStore();
-
+// METHODS
 const confirm = async(id) => {
   const error = await databaseStore.deleteUrl(id)
   if (!error) {
@@ -53,6 +57,17 @@ const cancel = () => {
   message.success('El elemento se conserva')
 }
 
+const copiarCortapapeles = async(id) => {
+  // console.log(id)
+  const path = `${window.location.origin}/${id}`;
+  const err = await navigator.clipboard.writeText(path)
+
+  if (err) {
+    message.error("No se ha logrado copiar :(")
+  } else {
+    message.success("¡Texto Copiado!")
+  }
+}
 // Sustiumos el siguiente metodo en el componente <add-form/>
 // const url = ref('');
 // const handleSubmit = () => {
@@ -60,6 +75,8 @@ const cancel = () => {
 //   databaseStore.addUrl(url.value);
 // }
 
+
+// CALLS
 databaseStore.getUrls();
 
 </script>

@@ -66,25 +66,11 @@ const userStore = useUserStore();
 const fileList = ref([]);
 // METHODS
 const onFinish = async() => {
-  const error = await userStore.updateUser(userStore.userData.displayName)
+  // more info on antdesign ....
+  const error = await userStore.updateUser(userStore.userData.displayName, fileList.value[0])
 
-  // Not neccesary since we only use 1 file
-  // fileList.value.forEach(file => {
-  //   console.log(file)
-  //   formData.append('files[]', file);
-  // });
-    
-  // On Upload Files handle
-  if(fileList.value[0]) {
-    const error = await userStore.updateImg(fileList.value[0])
-    if (error) {
-      message.error('Problemas para subir el archivo')
-    }
-  }
-  
-  if (!error) {
-    return message.success('¡Perfil actualizado!')
-  }
+  if (!error) return message.success('¡Perfil actualizado!')
+
   message.error('Error al actualizar el perfil')
 };
 

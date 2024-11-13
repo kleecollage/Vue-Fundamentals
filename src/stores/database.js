@@ -6,6 +6,7 @@ import {
 	getDoc,
 	getDocs,
 	query,
+	setDoc,
 	updateDoc,
 	where,
 } from 'firebase/firestore/lite';
@@ -55,10 +56,10 @@ export const useDatabaseStore = defineStore('database', {
 					short: nanoid(6),
 					user: auth.currentUser.uid,
 				};
-				const docRef = await addDoc(collection(db, 'urls'), objetoDoc);
+				await setDoc(doc(db, 'urls', objetoDoc.short), objetoDoc);
 				this.documents.push({
 					...objetoDoc,
-					id: docRef.id,
+					id: objetoDoc.short
 				});
 			} catch (error) {
 				console.log(error);
@@ -106,6 +107,23 @@ export const useDatabaseStore = defineStore('database', {
 				return docSnap.data().name;
 			} catch (error) {
 				console.log(error.nessage);
+			} finally {
+				this.loading = false
+			}
+		},		
+		// GET DOCUMENT
+		async getDocument(id) {
+			this.loading = true
+			try {
+				const docRef = doc(db, 'urls', id);
+				const docSnap = await getDoc(docRef);
+				// Validacion
+				if (!docSnap.exists()) return false
+
+				return docSnap.data().name;
+			} catch (error) {
+				console.log(error.nessage);
+				return false
 			} finally {
 				this.loading = false
 			}

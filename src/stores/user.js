@@ -20,8 +20,18 @@ export const useUserStore = defineStore('userStore', {
 	}),
 	actions: {
 		// UPDATE USER
-		async updateUser(displayName){
+		async updateUser(displayName, image){
+			this.loadingUser = true
 			try {
+				if (image) {
+					const storageRef = ref(storage, `perfiles/${this.userData.uid}`)
+					await uploadBytes(storageRef, image.originFileObj);
+					const photoURL  = await getDownloadURL(storageRef)
+					console.log(photoURL)
+					await updateProfile(auth.currentUser, {
+						photoURL
+					});
+				}
 				await updateProfile(auth.currentUser, {
 					displayName
 				});
@@ -29,22 +39,8 @@ export const useUserStore = defineStore('userStore', {
 			} catch (error) {
 				console.log(error)
 				return error.code
-			}
-		},
-		// UPDATE USER IMG PROFILE
-		async updateImg(image) {
-			try {
-				console.log(image)
-				const storageRef = ref(storage, `${this.userData.uid}/perfil`)
-				await uploadBytes(storageRef, image.originFileObj);
-				const photoURL  = await getDownloadURL(storageRef)
-				console.log(photoURL)
-				await updateProfile(auth.currentUser, {
-					photoURL
-				});
-				this.setUser(auth.currentUser)
-			} catch (error) {
-				console.log(error);
+			} finally {
+				this.loadingUser = false;
 			}
 		},
 		// USER INFO
