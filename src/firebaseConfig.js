@@ -5,7 +5,7 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyC3JamkXUd8kpEg1184NzpjiZWPK_U9MLI",
+  apiKey: "YOUR_APIKEY",
   authDomain: "vue-3-a37f1.firebaseapp.com",
   projectId: "vue-3-a37f1",
   storageBucket: "vue-3-a37f1.firebasestorage.app",
