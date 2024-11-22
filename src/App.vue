@@ -27,8 +27,32 @@ const previous = () => {
   fin.value -= postXpage
 };
 
-onMounted(async() => {
-  loading.value = true;
+// ==========   FETCHING DATA OPTION 1   ==========   //
+// onMounted(async() => {
+//   loading.value = true;
+//   try {
+//     const res = await fetch('https://jsonplaceholder.typicode.com/posts')
+//     posts.value = await res.json()
+//   } catch (error) {
+//     console.log(error)
+//   } finally {
+//     setTimeout(() => {
+//       loading.value = false
+//     }, 1500);
+//   }
+// });
+// ==========   FETCHING DATA OPTION 2   ==========   //
+// fetch('https://jsonplaceholder.typicode.com/posts')
+//   .then(res => res.json())
+//   .then(data => posts.value = data )
+//   .catch((e) => console.log(e))
+//   .finally(() => {
+//     setTimeout(() => {
+//       loading.value = false
+//     }, 1500);
+//   });
+// ==========   FETCHING DATA OPTION 3   ==========   //
+const fetchData = async () => {
   try {
     const res = await fetch('https://jsonplaceholder.typicode.com/posts')
     posts.value = await res.json()
@@ -39,17 +63,9 @@ onMounted(async() => {
       loading.value = false
     }, 1500);
   }
-});
+};
 
-// fetch('https://jsonplaceholder.typicode.com/posts')
-//   .then(res => res.json())
-//   .then(data => posts.value = data )
-//   .catch((e) => console.log(e))
-//   .finally(() => {
-//     setTimeout(() => {
-//       loading.value = false
-//     }, 1500);
-//   });
+fetchData();
 
 const maxLength = computed(() => posts.value.length )
 
